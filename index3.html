@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benim İçin Özel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-image: linear-gradient(45deg, #ff6ec7, #ff9a8b);
+            background-size: 400% 400%;
+            animation: gradientAnimation 10s ease infinite;
+            color: white;
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        h1, .love-message {
+            font-size: 32px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+        }
+
+        button {
+            font-size: 24px;
+            padding: 14px 28px;
+            border: none;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .yes {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .yes:hover {
+            background-color: #218838;
+            transform: scale(1.1);
+        }
+
+        .yes:focus {
+            outline: none;
+            transform: scale(1.2) rotate(360deg);
+        }
+
+        .no {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .no:hover {
+            background-color: #c82333;
+            transform: scale(1.1);
+        }
+
+        .no:focus {
+            outline: none;
+            animation: vibrate 0.2s ease-in-out 1;
+        }
+
+        @keyframes vibrate {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .love-message {
+            font-size: 36px;
+            color: white;
+            margin-top: 20px;
+            animation: glow 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            0% { text-shadow: 0 0 10px white, 0 0 20px white; }
+            100% { text-shadow: 0 0 20px white, 0 0 30px white; }
+        }
+
+        .heart {
+            width: 50px;
+            position: absolute;
+            animation: fall 3s linear infinite;
+        }
+
+        @keyframes fall {
+            from { transform: translateY(-100px); opacity: 1; }
+            to { transform: translateY(100vh); opacity: 0; }
+        }
+
+        .love-image {
+            width: 350px;
+            margin-top: 10px;
+            border-radius: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            animation: heartbeat 1s infinite alternate;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* Modern font and background for scrolling messages */
+        .scrolling-message {
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            color: white;
+            background: rgba(255, 255, 255, 0.4); /* Modern ve hafif saydam arka plan */
+            padding: 10px;
+            border-radius: 20px;
+            margin: 10px 0;
+            position: absolute;
+            width: 40%;
+        }
+
+        /* Animasyonlar: Bir aşağıdan yukarıya, bir yukarıdan aşağıya kayacak şekilde ayarladık */
+        .scroll-up {
+            animation: scroll-up 13s linear infinite;
+        }
+
+        .scroll-down {
+            animation: scroll-down 13s linear infinite;
+        }
+
+        @keyframes scroll-up {
+            0% { transform: translateY(100vh); }
+            100% { transform: translateY(-100vh); }
+        }
+
+        @keyframes scroll-down {
+            0% { transform: translateY(-100vh); }
+            100% { transform: translateY(100vh); }
+        }
+
+    </style>
+</head>
+<body>
+    <h1 id="question">Beni seviyor musun?</h1>
+    <div class="buttons">
+        <button class="yes" onclick="showLove()">Evet 💖</button>
+        <button class="no" onclick="shrinkNo()" id="noButton">Hayır 😢</button>
+    </div>
+    <div id="loveMessage" class="hidden love-container">
+        <img id="loveImage" src="image1.png" class="love-image" alt="Sevgi Resmi">
+        <h2 class="love-message">Bende Seni Çok Seviyorum Aleyna</h2>
+        <audio id="loveSong" loop>
+            <source id="audioSource" src="" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <script>
+        let messages = [
+            "Hayatım,Sevgilim,Aşkım,Ömrüm iyi ki varsın 💖",
+            "Sonsuza kadar seni seveceğim sevgilim",
+            "Sen benim her şeyimsin, hayatımın anlamısın",
+            "Hayatımın en güzel anı sensin",
+            "Birlikte çok güzeliz balım",
+            "Sen benim en güzel aşkımsın",
+            "Kalbim seninle güzelim",
+            "Masallardaki aşıklar gibiyiz",
+            "Yüzündeki parıltı ve gülümseme hiç gitmesin sevgilim ✨",
+            "Sana her geçen gün daha çok aşığım"
+        ];
+
+        let images = [
+            "resim.jpg", 
+            "resim2.jpg", 
+            "resim3.jpg", 
+            "resim4.jpg", 
+            "resim5.jpg"
+        ];
+
+        let imageIndex = 0;
+        let heartsCreated = false;
+
+        function showLove() {
+            document.body.style.backgroundColor = "#ffc0cb";
+            document.getElementById("question").classList.add("hidden");
+            document.querySelector(".buttons").classList.add("hidden");
+            document.getElementById("loveMessage").classList.remove("hidden");
+
+            document.getElementById("loveImage").src = images[imageIndex];
+            setInterval(function() {
+                imageIndex = (imageIndex + 1) % images.length;
+                document.getElementById("loveImage").src = images[imageIndex];
+            }, 5000);
+
+            // Kalp yağmurunu başlatıyoruz
+            for (let i = 0; i < 20; i++) {
+                createHeart();
+            }
+
+            // Müzik başlatılıyor
+            const songs = ["song1.mp3", "song2.mp3", "song3.mp3", "song4.mp3", "song5.mp3"];
+            const randomSong = songs[Math.floor(Math.random() * songs.length)];
+
+            let audioElement = document.getElementById("loveSong");
+            document.getElementById("audioSource").src = randomSong;
+            audioElement.load();
+            audioElement.play();
+
+            // Kalp yağmuru bittiğinde kayan mesajları başlat
+            setTimeout(startScrollingMessages, 1000); // Kalp yağmurunun bitişi 4 saniye sonra kayan mesajlar başlasın
+        }
+
+        function createHeart() {
+            const heart = document.createElement("img");
+            heart.src = "heart.png";
+            heart.classList.add("heart");
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = Math.random() * 2 + 3 + "s";
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 3000);
+        }
+
+        function shrinkNo() {
+            let noButton = document.getElementById("noButton");
+            let newSize = parseFloat(window.getComputedStyle(noButton).fontSize) - 4;
+            if (newSize > 8) {
+                noButton.style.fontSize = newSize + "px";
+                setTimeout(shrinkNo, 100);
+            }
+        }
+
+        function startScrollingMessages() {
+            let messageIndex = 0;
+            setInterval(function() {
+                let message = messages[messageIndex];
+                let scrollingMessage = document.createElement('div');
+                scrollingMessage.classList.add('scrolling-message');
+                scrollingMessage.innerHTML = message;
+
+                if (messageIndex % 2 === 0) {
+                    scrollingMessage.classList.add('scroll-up');
+                } else {
+                    scrollingMessage.classList.add('scroll-down');
+                }
+
+                document.body.appendChild(scrollingMessage);
+
+                messageIndex = (messageIndex + 1) % messages.length;
+
+                setTimeout(() => scrollingMessage.remove(), 11000); // 13 saniye sonra kayar
+            }, 7000); // her 13 saniyede bir yeni mesaj gelir
+        }
+    </script>
+</body>
+</html>
